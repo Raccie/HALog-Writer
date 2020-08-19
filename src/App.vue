@@ -6,10 +6,10 @@
     <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
     <br>
     <label for="gelernt">Gelerntes</label><br>
-    <textarea id="gelernt" v-model="gelernt"></textarea><br><br>
+    <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br><br>
     <label>Offene Fragen:</label>
-    <input v-model="drawOpenQuestions" type="checkbox"><br>
-    <textarea id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br><br>
+    <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox"><br>
+    <textarea class="form-control" id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br><br>
     <label>Trennlinie:</label>
     <div>
       <input type="radio" id="over" name="divider" v-model="dividerPosition" value="oben">
@@ -28,26 +28,37 @@
 
 
     <div v-if="renderComponent" id="output">
+      <div id="output-formatted">
         <span v-if="dividerPosition==='oben'">
             {{ divider(dividerString, dividerwidth) }}
         </span><br>
-      <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
-      <b>Tätigkeiten:</b>
-      <ul v-for="item of items" :key="item.id">
-        <span v-if="!item.removed">
-          <li>{{ item.name }}</li>
+        <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
+        <b>Tätigkeiten:</b>
+        <ul v-for="item of items" :key="item.id">
+          <span v-if="!item.removed">
+            <li>{{ item.name }}</li>
+          </span>
+        </ul>
+        <b>Was habe ich gelernt?</b><br>
+        <span>{{ gelernt }}</span><br><br>
+        <div v-bind:hidden="!drawOpenQuestions">
+          <span><b>Offene Fragen: </b></span><br>
+          <span>{{ questions }}</span><br><br>
+        </div>
+        <span v-if="dividerPosition==='unten'">
+          {{ divider(dividerString, dividerwidth) }}
         </span>
-      </ul>
-      <b>Was habe ich gelernt?</b><br>
-      <span>{{ gelernt }}</span><br><br>
-      <div v-bind:hidden="!drawOpenQuestions">
-        <span><b>Offene Fragen: </b></span><br>
-        <span>{{ questions }}</span><br><br>
       </div>
-      <span v-if="dividerPosition==='unten'">
-        {{ divider(dividerString, dividerwidth) }}
-      </span>
+
+      <hr><hr>
+
+        <pre>
+{{htmlRaw}}
+        </pre>
+
     </div>
+
+
   </div>
 </template>
 
@@ -75,6 +86,7 @@ export default {
       dividerPosition: 'unten',
       dividerString: '#',
       dividerwidth: 30,
+      htmlRaw: '',
     }
   },
   methods: {
@@ -85,6 +97,7 @@ export default {
       this.$nextTick(() => {
         // Add the component back in
         this.renderComponent = true;
+        this.setOuptutHTML();
       });
     },
     divider(divider, width) {
@@ -95,6 +108,13 @@ export default {
         out += divider;
       }
       return out;
+    },
+    setOuptutHTML() {
+      let a = document.getElementById('output-formatted');
+      if(a !== null) {
+        this.htmlRaw = a.innerHTML;
+      }
+      this.htmlRaw = '';
     }
   }
 }
@@ -102,11 +122,16 @@ export default {
 </script>
 
 <style>
+@import "~bootstrap/dist/css/bootstrap.min.css";
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+
+  margin-left: 10px;
+  margin-top: 20px;
 }
 
 #app > label {
@@ -127,4 +152,14 @@ export default {
   margin-left: 10px;
   width: 40px;
 }
+
+pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  white-space: -moz-pre-wrap;
+  white-space: pre-wrap;
+  white-space: -o-pre-wrap;
+  word-wrap: break-word;
+}
+
 </style>

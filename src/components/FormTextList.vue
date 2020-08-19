@@ -1,11 +1,10 @@
 <template>
   <div v-if="renderComponent">
-    <button v-on:click="items.push({id: items.length, name: ''})">Tätigkeit hinzufügen</button>
+    <button class="btn btn-dark" v-on:click="items.push({id: items.length, name: ''})">Tätigkeit hinzufügen</button>
     <div v-for="item in items" :key="item.id">
-      <span v-if="!item.removed">
-        <input type="text" v-bind:id="items.indexOf(item)" v-model="item.name">
-        <button v-on:click="remove(item)">Entfernen</button>
-        <!--button v-on:click="items = items.filter((value)=>{return value !== item}">Entfernen</button-->
+      <span class="form-group form-inline" v-if="!item.removed">
+        <input class="taet-text form-control " type="text" v-bind:id="items.indexOf(item)" v-model="item.name">
+        <button class="btn btn-dark addbtn taet-btn form-control" v-on:click="remove(item)">Entfernen</button>
       </span>
     </div>
   </div>
@@ -44,5 +43,16 @@ name: "FormTextList",
 </script>
 
 <style scoped>
-
+.addbtn {
+  margin-left: 10px;
+}
+.taet-btn {
+  max-width: 100px;
+}
+.taet-text {
+  max-width: 300px;
+}
+.form-inline {
+  margin-top: 10px;
+}
 </style>
