@@ -1,64 +1,60 @@
 <template>
-  <div id="app">
-    <label for="date">Datum:</label><br>
-    <input v-model="date" id="date" type="date"><br><br>
-    <label for="taetigkeiten">Tätigkeiten:</label>
-    <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
-    <br>
-    <label for="gelernt">Gelerntes</label><br>
-    <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br><br>
-    <label>Offene Fragen:</label>
-    <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox"><br>
-    <textarea class="form-control" id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br><br>
-    <label>Trennlinie:</label>
-    <div>
-      <input type="radio" id="over" name="divider" v-model="dividerPosition" value="oben">
-      <label for="over">Oben</label>
-    </div>
-    <div>
-      <input type="radio" id="under" name="divider" v-model="dividerPosition" value="unten">
-      <label for="under">Unten</label>
-    </div>
-    <div>
-      <input type="radio" id="none" name="divider" v-model="dividerPosition" value="kein">
-      <label for="none">Kein</label>
-    </div>
-    <input type="text" id="dividersymbol" v-model="dividerString">
-    <input type="number" id="dividerwidth" v-model="dividerwidth">
-
-
-    <div v-if="renderComponent" id="output">
-      <div id="output-formatted">
-        <span v-if="dividerPosition==='oben'">
-            {{ divider(dividerString, dividerwidth) }}
-        </span><br>
-        <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
-        <b>Tätigkeiten:</b>
-        <ul v-for="item of items" :key="item.id">
-          <span v-if="!item.removed">
-            <li>{{ item.name }}</li>
-          </span>
-        </ul>
-        <b>Was habe ich gelernt?</b><br>
-        <span>{{ gelernt }}</span><br><br>
-        <div v-bind:hidden="!drawOpenQuestions">
-          <span><b>Offene Fragen: </b></span><br>
-          <span>{{ questions }}</span><br><br>
+  <div id="app" class="container-fluid">
+    <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+      <div class="col col-lg-6">
+        <label for="date">Datum:</label><br>
+        <input v-model="date" id="date" type="date"><br><br>
+        <label for="taetigkeiten">Tätigkeiten:</label>
+        <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
+        <br>
+        <label for="gelernt">Gelerntes</label><br>
+        <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br><br>
+        <label>Offene Fragen:</label>
+        <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox"><br>
+        <textarea class="form-control" id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br><br>
+        <label>Trennlinie:</label>
+        <div>
+          <input type="radio" id="over" name="divider" v-model="dividerPosition" value="oben">
+          <label for="over">Oben</label>
         </div>
-        <span v-if="dividerPosition==='unten'">
-          {{ divider(dividerString, dividerwidth) }}
-        </span>
+        <div>
+          <input type="radio" id="under" name="divider" v-model="dividerPosition" value="unten">
+          <label for="under">Unten</label>
+        </div>
+        <div>
+          <input type="radio" id="none" name="divider" v-model="dividerPosition" value="kein">
+          <label for="none">Kein</label>
+        </div>
+        <input type="text" id="dividersymbol" v-model="dividerString">
+        <input type="number" id="dividerwidth" v-model="dividerwidth">
       </div>
+      <div class="col col-lg-6">
 
-      <hr><hr>
-
-        <pre>
-{{htmlRaw}}
-        </pre>
-
+      <div v-if="renderComponent" id="output">
+        <div id="output-formatted">
+          <span v-if="dividerPosition==='oben'">
+              {{ divider(dividerString, dividerwidth) }}
+          </span><br>
+          <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
+          <b>Tätigkeiten:</b>
+          <ul v-for="item of items" :key="item.id">
+            <span v-if="!item.removed">
+              <li>{{ item.name }}</li>
+            </span>
+          </ul>
+          <b>Was habe ich gelernt?</b><br>
+          <span>{{ gelernt }}</span><br><br>
+          <div v-bind:hidden="!drawOpenQuestions">
+            <span><b>Offene Fragen: </b></span><br>
+            <span>{{ questions }}</span><br><br>
+          </div>
+          <span v-if="dividerPosition==='unten'">
+            {{ divider(dividerString, dividerwidth) }}
+          </span>
+        </div>
+      </div>
     </div>
-
-
+    </div>
   </div>
 </template>
 
