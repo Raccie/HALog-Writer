@@ -1,17 +1,21 @@
 <template>
   <div id="app" class="container-fluid">
-    <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+    <div class="row align-items-start row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
       <div class="col col-lg-6">
         <label for="date">Datum:</label><br>
         <input v-model="date" id="date" type="date"><br><br>
         <label for="taetigkeiten">Tätigkeiten:</label>
         <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
+        <label for="zeitaufw">Zeitaufwand</label><br>
+        <input id="zeitaufw" type="text" v-model="zeitaufwand">
         <br>
         <label for="gelernt">Gelerntes</label><br>
-        <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br><br>
-        <label>Offene Fragen:</label>
-        <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox"><br>
-        <textarea class="form-control" id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br><br>
+        <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br>
+        <span>
+          <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox">
+          <label>Offene Fragen:</label>
+        </span>
+        <textarea class="form-control" id="fragen" v-model="questions" v-bind:hidden="!drawOpenQuestions"></textarea><br>
         <label>Trennlinie:</label>
         <div>
           <input type="radio" id="over" name="divider" v-model="dividerPosition" value="oben">
@@ -29,7 +33,6 @@
         <input type="number" id="dividerwidth" v-model="dividerwidth">
       </div>
       <div class="col col-lg-6">
-
       <div v-if="renderComponent" id="output">
         <div id="output-formatted">
           <span v-if="dividerPosition==='oben'">
@@ -42,6 +45,7 @@
               <li>{{ item.name }}</li>
             </span>
           </ul>
+          <span><b>Zeitaufwand: </b>{{zeitaufwand}}</span><br>
           <b>Was habe ich gelernt?</b><br>
           <span>{{ gelernt }}</span><br><br>
           <div v-bind:hidden="!drawOpenQuestions">
@@ -67,7 +71,6 @@ export default {
   name: 'App',
   components: {
     FormTextList
-    //HelloWorld
   },
   data: function () {
     return {
@@ -78,6 +81,7 @@ export default {
       ],
       gelernt: '',
       questions: '',
+      zeitaufwand: '',
       drawOpenQuestions: false,
       dividerPosition: 'unten',
       dividerString: '#',
@@ -100,7 +104,8 @@ export default {
       if (divider === '') return '';
       console.log(this.dividerPosition);
       let out = '';
-      while (out.length < width) {
+      let actLength = width >= 300 ? 300 : width
+      while (out.length < actLength) {
         out += divider;
       }
       return out;
@@ -157,5 +162,6 @@ pre {
   white-space: -o-pre-wrap;
   word-wrap: break-word;
 }
+
 
 </style>
