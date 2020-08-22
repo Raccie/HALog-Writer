@@ -1,9 +1,9 @@
 <template>
   <div id="app" class="container-fluid">
-    <div class="row align-items-start row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
-      <div class="col col-lg-6">
+    <div class="row row-cols-lg-2 row-cols-md-2 row-cols-sm-1">
+      <div class="col col-lg-5">
         <label for="date">Datum:</label><br>
-        <input v-model="date" id="date" type="date"><br><br>
+        <input v-model="date" id="date" class="form-control" type="date"><br><br>
         <label for="taetigkeiten">Tätigkeiten:</label>
         <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
         <label for="zeitaufw">Zeitaufwand</label><br>
@@ -11,7 +11,7 @@
         <br>
         <label for="gelernt">Gelerntes</label><br>
         <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br>
-        <span>
+        <span style="margin-left: 20px">
           <input class="form-check-input" v-model="drawOpenQuestions" type="checkbox">
           <label>Offene Fragen:</label>
         </span>
@@ -29,11 +29,14 @@
           <input type="radio" id="none" name="divider" v-model="dividerPosition" value="kein">
           <label for="none">Kein</label>
         </div>
-        <input type="checkbox" id="html-divider-chkbx" v-model="dividerHtmlStyle">
-        <input type="text" id="dividersymbol" v-model="dividerString" v-bind:disabled="dividerHtmlStyle">
-        <input type="number" id="dividerwidth" v-model="dividerwidth" v-bind:disabled="dividerHtmlStyle">
+        <label for="html-divider-chkbx">HTML-Style </label>
+        <input style="margin-left: 10px" type="checkbox" id="html-divider-chkbx" v-model="dividerHtmlStyle"><br>
+        <span style="margin-left: 20px">
+          <input type="text" id="dividersymbol" v-model="dividerString" v-bind:disabled="dividerHtmlStyle">
+          <input type="number" id="dividerwidth" v-model="dividerwidth" v-bind:disabled="dividerHtmlStyle">
+        </span>
       </div>
-      <div class="col col-lg-6">
+      <div class="col col-lg-5">
         <div v-if="renderComponent" id="output">
           <!--div id="output-formatted">
             <span v-if="dividerPosition==='oben'">
@@ -148,7 +151,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
 
-  margin-left: 10px;
   margin-top: 20px;
 }
 
