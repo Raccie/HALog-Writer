@@ -7,7 +7,7 @@
         <label for="taetigkeiten">Tätigkeiten:</label>
         <FormTextList id="taetigkeiten" v-bind:parent-rerender="forceRerender" v-bind:items="items"></FormTextList>
         <label for="zeitaufw">Zeitaufwand</label><br>
-        <input id="zeitaufw" type="text" v-model="zeitaufwand">
+        <input id="zeitaufw" class="form-control" type="text" v-model="zeitaufwand">
         <br>
         <label for="gelernt">Gelerntes</label><br>
         <textarea class="form-control" id="gelernt" v-model="gelernt"></textarea><br>
@@ -29,42 +29,56 @@
           <input type="radio" id="none" name="divider" v-model="dividerPosition" value="kein">
           <label for="none">Kein</label>
         </div>
-        <input type="text" id="dividersymbol" v-model="dividerString">
-        <input type="number" id="dividerwidth" v-model="dividerwidth">
+        <input type="checkbox" id="html-divider-chkbx" v-model="dividerHtmlStyle">
+        <input type="text" id="dividersymbol" v-model="dividerString" v-bind:disabled="dividerHtmlStyle">
+        <input type="number" id="dividerwidth" v-model="dividerwidth" v-bind:disabled="dividerHtmlStyle">
       </div>
       <div class="col col-lg-6">
-      <div v-if="renderComponent" id="output">
-        <div id="output-formatted">
-          <span v-if="dividerPosition==='oben'">
+        <div v-if="renderComponent" id="output">
+          <!--div id="output-formatted">
+            <span v-if="dividerPosition==='oben'">
+                {{ divider(dividerString, dividerwidth) }}
+            </span><br>
+            <span><b>Zeitaufwand: </b>{{zeitaufwand}}</span><br>
+            <b>Was habe ich gelernt?</b><br>
+            <span>{{ gelernt }}</span><br><br>
+            <div v-bind:hidden="!drawOpenQuestions">
+              <span><b>Offene Fragen: </b></span><br>
+              <span>{{ questions }}</span><br><br>
+            </div>
+            <span v-if="dividerPosition==='unten'">
               {{ divider(dividerString, dividerwidth) }}
-          </span><br>
-          <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
-          <b>Tätigkeiten:</b>
-          <ul v-for="item of items" :key="item.id">
-            <span v-if="!item.removed">
-              <li>{{ item.name }}</li>
             </span>
-          </ul>
-          <span><b>Zeitaufwand: </b>{{zeitaufwand}}</span><br>
-          <b>Was habe ich gelernt?</b><br>
-          <span>{{ gelernt }}</span><br><br>
-          <div v-bind:hidden="!drawOpenQuestions">
-            <span><b>Offene Fragen: </b></span><br>
-            <span>{{ questions }}</span><br><br>
+          </div-->
+          <div id="output-formatted">
+            <span v-if="dividerPosition==='oben'" v-html="divider(dividerString, dividerwidth)">
+            </span>
+            <b>Datum: {{ new Date(date).toLocaleDateString() }}</b><br>
+            <span>
+              <b>Tätigkeiten:</b>
+            </span>
+            <span>
+              <ul id="taetlist" v-for="item of items" :key="item.id">
+                <li v-if="!item.removed">{{ item.name }}</li>
+              </ul>
+            </span>
+            <p>
+              <b>Zeitaufwand: </b>{{ zeitaufwand }}<br>
+              <span><b>Was habe ich gelernt?<br></b>{{ gelernt }}<br></span>
+
+              <span v-if="drawOpenQuestions"><b>Offene Fragen<br></b>{{ questions }}</span>
+            </p>
+            <span v-if="dividerPosition==='unten'" v-html="divider(dividerString, dividerwidth)">
+            </span>
           </div>
-          <span v-if="dividerPosition==='unten'">
-            {{ divider(dividerString, dividerwidth) }}
-          </span>
+          <button class="btn btn-dark" v-on:click="copyHTML">Copy!</button>
         </div>
       </div>
-    </div>
     </div>
   </div>
 </template>
 
 <script>
-//import HelloWorld from './components/HelloWorld.vue'
-
 import FormTextList from "@/components/FormTextList";
 
 export default {
@@ -87,6 +101,7 @@ export default {
       dividerString: '#',
       dividerwidth: 30,
       htmlRaw: '',
+      dividerHtmlStyle: false,
     }
   },
   methods: {
@@ -97,26 +112,28 @@ export default {
       this.$nextTick(() => {
         // Add the component back in
         this.renderComponent = true;
-        this.setOuptutHTML();
       });
     },
     divider(divider, width) {
-      if (divider === '') return '';
-      console.log(this.dividerPosition);
-      let out = '';
-      let actLength = width >= 300 ? 300 : width
-      while (out.length < actLength) {
-        out += divider;
+      if(!this.dividerHtmlStyle) {
+        if (divider === '') return '';
+        let out = '<span>';
+        let actLength = width >= 300 ? 300 : width
+        while (out.length < actLength) {
+          out += divider;
+        }
+        out += '</span><br>';
+        return out;
+      } else {
+        return '<hr>'
       }
-      return out;
     },
-    setOuptutHTML() {
-      let a = document.getElementById('output-formatted');
-      if(a !== null) {
-        this.htmlRaw = a.innerHTML;
-      }
-      this.htmlRaw = '';
-    }
+    copyHTML() {
+      let copyText = document.getElementById('output-formatted');
+      navigator.clipboard.writeText(copyText.innerHTML);
+      alert("Copied!");
+
+    },
   }
 }
 
@@ -161,6 +178,10 @@ pre {
   white-space: pre-wrap;
   white-space: -o-pre-wrap;
   word-wrap: break-word;
+}
+
+.form-control {
+  max-width: 330px;
 }
 
 
